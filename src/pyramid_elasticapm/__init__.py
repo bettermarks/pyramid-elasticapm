@@ -4,9 +4,9 @@ import sys
 
 import elasticapm
 import pkg_resources
-from elasticapm.utils import compat, get_url_dict
-from pyramid.events import ApplicationCreated, subscriber
+from elasticapm.utils import get_url_dict
 from pyramid._compat import reraise
+from pyramid.events import ApplicationCreated, subscriber
 
 
 def includeme(config):
@@ -26,6 +26,10 @@ def elasticapm_instrument(event):
     elasticapm.instrument()
 
 
+# https://www.elastic.co/guide/en/apm/agent/python/current/configuration.html
+ELASTICAPM_PREFIX = 'elasticapm.'
+
+
 class TweenFactory:
     def __init__(self, handler, registry):
         self.handler = handler
@@ -33,16 +37,10 @@ class TweenFactory:
         settings = registry.settings
 
         config = {
-            'SERVICE_NAME': settings['elasticapm.service_name'],
-            'SERVER_URL': settings['elasticapm.server_url'],
-            'SECRET_TOKEN': settings['elasticapm.secret_token'],
-            'ENVIRONMENT': settings['elasticapm.environment'],
-            'TRANSACTION_SAMPLE_RATE': settings['elasticapm.transaction_sample_rate'],
+            key.replace(ELASTICAPM_PREFIX, '').upper(): value
+            for key, value in settings.items()
+            if key.startswith(ELASTICAPM_PREFIX)
         }
-        if settings.get('elasticapm.transactions_ignore_patterns', ''):
-            config['TRANSACTIONS_IGNORE_PATTERNS'] = settings[
-                'elasticapm.transactions_ignore_patterns'
-            ].split()
 
         pkg_versions = dict()
         for pkg_name in (
@@ -68,7 +66,7 @@ class TweenFactory:
 
     def __call__(self, request):
         self.client.begin_transaction('request')
-        transaction_result = ""
+        transaction_result = ''
         response = None
         try:
             response = self.handler(request)
@@ -80,18 +78,17 @@ class TweenFactory:
         except Exception:
             transaction_result = '5xx'
             self.client.capture_exception(
-                context={'request': self.get_data_from_request(
-                    request, response
-                )},
+                context={
+                    'request': self.get_data_from_request(request, response)
+                },
                 handled=False,
             )
             reraise(*sys.exc_info())
         finally:
             transaction_name = self.get_transaction_name(request)
             elasticapm.set_context(
-                lambda: self.get_data_from_request(
-                    request, response
-                ), 'request'
+                lambda: self.get_data_from_request(request, response),
+                'request',
             )
             elasticapm.set_user_context(
                 user_id=request.authenticated_userid,
