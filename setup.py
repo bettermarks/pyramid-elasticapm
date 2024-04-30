@@ -12,7 +12,7 @@ setup(
     version='1.0.5.dev0',
     install_requires=[
         'elastic-apm',
-        'pyramid',
+        'pyramid==1.10.8',
     ],
     extras_require={
         'test': [
@@ -29,7 +29,7 @@ setup(
     author='Sebastian Wehrmann (riscLOG Solution GmbH)',
     author_email='sebastian@risclog.com',
     license='BSD',
-    url='https://github.com/risclog-solution/pyramid-elasticapm',
+    url='https://github.com/bettermarks/pyramid-elasticapm',
     keywords='elastic apm pyramid',
     classifiers="""\
 License :: OSI Approved :: BSD License
