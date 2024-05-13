@@ -67,7 +67,7 @@ Contributing
     export VIRTUAL_ENV=venv
     layout python python3.8
 4. use `direnv allow` so direnv creates and activates the virtual env when entering the directory
-5. use `pip install -r requirements.lock` to install the dependencies
+5. use `pip install -e . -r requirements.lock` to install the dependencies
 6. run the tests `pytest`
 7. use `pre-commit install` before your first commit, see https://github.com/bettermarks/.github#git-hooks
 8. use `pip freeze --local > requirements.lock` to update the lock file, after the input changed

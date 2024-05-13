@@ -16,7 +16,7 @@ jobs:
       with:
         python-version: 3.8
     - run: pip install -U pip
-    - run: pip install -r requirements.lock
+    - run: pip install -e . -r requirements.lock
     - run: pytest
       env:
         PYTHONUNBUFFERED: 1
