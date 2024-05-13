@@ -1,9 +1,16 @@
-# See https://pre-commit.com for more information
+# See https://github.com/bettermarks/.github#git-hooks for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
-
+  - repo: https://github.com/bettermarks/.github
+    # to get the latest SHA use `gh api /repos/bettermarks/.github/commits/HEAD -q .sha`
+    rev: b8bcd419de6a66a6b3a5d7ca3197b801348690be
+    hooks:
+      - id: no-commit-to-default-branch
+        # the default branch of the repository containing this yaml file
+        args: [master]
+      - id: pre-commit-autoupdate
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.6.0
     hooks:
 
     # These are the most critical checks.
@@ -52,12 +59,12 @@ repos:
     # This checks that all links to our VCS are permalinks. How oddly specific!
     - id: check-vcs-permalinks
 
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.4
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
     hooks:
       - id: flake8
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.9.0
+    rev: v3.15.2
     hooks:
     - id: pyupgrade
   - repo: https://github.com/asottile/seed-isort-config
@@ -65,14 +72,14 @@ repos:
     hooks:
     - id: seed-isort-config
   - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.7.0  # pick the isort version you'd like to use from https://github.com/pre-commit/mirrors-isort/releases
+    rev: v5.10.1  # pick the isort version you'd like to use from https://github.com/pre-commit/mirrors-isort/releases
     hooks:
     - id: isort
-  - repo: https://github.com/psf/black
-    rev: 20.8b1
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 24.4.2
     hooks:
     - id: black
   - repo: https://github.com/mgedmin/check-manifest
-    rev: '0.46'
+    rev: '0.49'
     hooks:
     - id: check-manifest
