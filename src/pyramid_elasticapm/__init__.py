@@ -5,6 +5,7 @@ import sys
 import elasticapm
 import pkg_resources
 from elasticapm.utils import get_url_dict
+from elasticapm.utils.disttracing import TraceParent
 from pyramid._compat import reraise
 from pyramid.events import ApplicationCreated, subscriber
 
@@ -65,7 +66,9 @@ class TweenFactory:
         )
 
     def __call__(self, request):
-        self.client.begin_transaction('request')
+        self.client.begin_transaction(
+            'request', TraceParent.from_headers(request.headers)
+        )
         transaction_result = ''
         response = None
         try:

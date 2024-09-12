@@ -31,7 +31,9 @@ def test_get(apmserver):
 
     app = TestApp(make_app(apmserver.url))
 
-    resp = app.get('/')
+    resp = app.get(
+        url='/',
+    )
     resp.mustcontain(b'{"status": "ok"}')
 
     # Give the apm integration some time to send requests to the apm server
@@ -48,7 +50,10 @@ def test_post(apmserver):
 
     app = TestApp(make_app(apmserver.url))
 
-    resp = app.post('/', dict(foo='bar'))
+    resp = app.post(
+        url='/',
+        params=dict(foo='bar'),
+    )
     resp.mustcontain(b'{"status": "ok"}')
 
     # Give the apm integration some time to send requests to the apm server
