@@ -93,9 +93,14 @@ class TweenFactory:
                 lambda: self.get_data_from_request(request, response),
                 'request',
             )
-            elasticapm.set_user_context(
-                user_id=request.authenticated_userid,
-            )
+            try:
+                elasticapm.set_user_context(
+                    user_id=request.authenticated_userid,
+                )
+            except Exception:
+                # getting authenticated_userid may fail. .e.g decoding an auth
+                # JWT.
+                pass
             self.client.end_transaction(transaction_name, transaction_result)
 
     def get_data_from_request(self, request, response):
